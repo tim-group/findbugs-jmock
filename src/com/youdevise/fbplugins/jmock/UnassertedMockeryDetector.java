@@ -13,7 +13,6 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
-import org.apache.bcel.generic.ReferenceType;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
@@ -74,7 +73,6 @@ public class UnassertedMockeryDetector implements Detector {
 
     private JUnitTestClassVisitor analyseClassToDiscoverJUnitTestMethods(ClassContext classContext) {
         ClassDescriptor classDescriptor = classContext.getClassDescriptor();
-        System.out.printf("Running plugin detector (on %s)%n", classDescriptor.getDottedClassName());
         
         FBClassReader reader;
         JUnitTestClassVisitor testMethodFinder = new JUnitTestClassVisitor();
@@ -88,8 +86,6 @@ public class UnassertedMockeryDetector implements Detector {
         return testMethodFinder;
     }
     
-    
-
     private void logError(ClassDescriptor classDescriptor, Exception e) {
         System.err.printf("[Findbugs4JMock plugin:] Error in detecting unasserted Mockery in %s%n", classDescriptor.getDottedClassName());
     }
@@ -128,8 +124,10 @@ public class UnassertedMockeryDetector implements Detector {
                 continue;
             }
             
-            doesCallCheckingOnMockery |= callsCheckingOnMockery(iins, frame, cpg);
-            assertIsSatisfiedIsActuallyCalled |= assertIsSatisfiedActuallyCalled(iins, frame, cpg);
+            String methodName = iins.getMethodName(cpg);
+            String signature = iins.getReferenceType(cpg).getSignature();
+            doesCallCheckingOnMockery |= callsCheckingOnMockery(methodName, signature);
+            assertIsSatisfiedIsActuallyCalled |= assertIsSatisfiedActuallyCalled(methodName, signature);
         }
         
         if (doesCallCheckingOnMockery && assertIsSatisfiedShouldBeCalled && !assertIsSatisfiedIsActuallyCalled) {
@@ -202,7 +200,7 @@ public class UnassertedMockeryDetector implements Detector {
                 continue;
             }
             
-            createsExpectationWhichShouldBeAsserted |= createsExpectationWhichShouldBeAsserted(iins, frame, cpg);
+            createsExpectationWhichShouldBeAsserted |= createsExpectationWhichShouldBeAsserted(iins.getMethodName(cpg));
         }
         return createsExpectationWhichShouldBeAsserted;
     }
@@ -216,22 +214,15 @@ public class UnassertedMockeryDetector implements Detector {
 	}
     
     
-    private boolean createsExpectationWhichShouldBeAsserted(InvokeInstruction iins, ConstantFrame frame, ConstantPoolGen cpg) {
-        String methodName = iins.getMethodName(cpg);
+    private boolean createsExpectationWhichShouldBeAsserted(String methodName) {
         return expectationMethodNames.contains(methodName);
 	}
 
-	private boolean callsCheckingOnMockery(InvokeInstruction iins, ConstantFrame frame, ConstantPoolGen cpg) {
-	    String methodName = iins.getMethodName(cpg);
-	    ReferenceType type = iins.getReferenceType(cpg);
-	    String signature = type.getSignature();
+	private boolean callsCheckingOnMockery(String methodName, String signature) {
 		return "Lorg/jmock/Mockery;".equals(signature) && "checking".equals(methodName);
 	}
 	
-	private boolean assertIsSatisfiedActuallyCalled(InvokeInstruction iins, ConstantFrame frame, ConstantPoolGen cpg) {
-        String methodName = iins.getMethodName(cpg);
-        ReferenceType type = iins.getReferenceType(cpg);
-        String signature = type.getSignature();
+	private boolean assertIsSatisfiedActuallyCalled(String methodName, String signature) {
         return "Lorg/jmock/Mockery;".equals(signature) && "assertIsSatisfied".equals(methodName);
     }
 
