@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="findbugs/plugin/Findbugs4YouDevise.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/FindBugs4YouDevise/build/Findbugs4YouDevise.jardesc" exportErrors="false" exportWarnings="false" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/FindBugs4YouDevise/build/MANIFEST.MF" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=FindBugs4YouDevise/src&lt;com.youdevise.fbplugins.jmock"/>
+        <file path="/FindBugs4YouDevise/findbugs.xml"/>
+        <file path="/FindBugs4YouDevise/bugrank.txt"/>
+        <file path="/FindBugs4YouDevise/messages.xml"/>
+    </selectedElements>
+</jardesc>

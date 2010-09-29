@@ -1,0 +1,90 @@
+<MessageCollection>
+
+<!-- Plugin information -->
+    <Plugin>
+        <ShortDescription>Findbugs4JMock plugin</ShortDescription>
+        <Details>
+            <![CDATA[
+            <p>This plugin detects incorrect usage of the JMock library.</p>
+            ]]>
+        </Details>
+    </Plugin>
+
+  <Detector class="com.youdevise.fbplugins.jmock.UnassertedMockeryDetector" >
+    <Details>
+      <![CDATA[
+        <p> This detector looks for expectations being set on a JMock context, 
+        where the tests forget to assert that the expectations are satisfied.
+        </p>
+      ]]>
+    </Details>
+  </Detector>
+
+
+  <BugPattern type="JMOCK_UNASSERTED_CONTEXT">
+    <ShortDescription>Forgot to call mockery.assertIsSatisfied()</ShortDescription>
+
+<LongDescription>
+{1} places expectations on an instance of org.jmock.Mockery, 
+but does not assert the expectations are satisfied (with a call to mockery.assertIsSatisfied()).
+
+</LongDescription>
+
+<Details>
+  <![CDATA[
+    <p>
+    Expectations placed on an instance of org.jmock.Mockery are usually part of testing behaviour in a unit test. 
+    If expectations are added, but the test does not check they are satisfied, 
+    the test will not fail when the expected behaviour is not observed. This is akin to writing a JUnit test without any calls to assertXXX().
+    </p>
+    <br />
+    <p>
+    Conversely, it could indicate an incorrect use of expectations. For example, when mocking return values, using:
+    <pre>    oneOf(...); will(returnValue(...));</pre> 
+    when really the intention is to use:
+    <pre>    allowing(...); will(returnValue(...));</pre>
+    <br /><br />
+    In this case the problem will be for maintainers of your test, as the intentions of the code is unclear.
+    </p>
+    <br /><br />
+    <p>
+    From the JMock documentation, a typical implementation for a test should look like:
+    <br /><br />
+    <pre>
+public void testSomeAction() {
+    ... set up ...
+    
+    context.checking(new Expectations() {{
+        ... expectations go here ...
+        oneOf(...);
+    }});
+    
+    ... code being tested ...
+    
+    context.assertIsSatisfied();
+    
+    ... other assertions ...
+}
+	</pre>
+	</p>
+	<br />
+	<p>
+	Only a subset of the available org.jmock.Expectations method will trigger this bug report. Those methods are:
+	<pre>
+	oneOf()
+	exactly()
+	one()
+	atLeast()
+	between()
+	atMost()
+	never()
+	with()
+	</pre>
+	</p>
+  ]]>
+</Details>
+  </BugPattern>
+
+  <BugCode abbrev="JMOCK">Unasserted JMock Context</BugCode>
+  
+</MessageCollection>
