@@ -88,3 +88,4 @@ public void testSomeAction() {
   <BugCode abbrev="JMOCK">Unasserted JMock Context</BugCode>
   
 </MessageCollection>
+

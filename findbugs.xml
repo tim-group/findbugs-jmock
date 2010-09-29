@@ -6,3 +6,4 @@
   <BugPattern type="JMOCK_UNASSERTED_CONTEXT" abbrev="JMOCK" category="CORRECTNESS" />
 
 </FindbugsPlugin>
+
