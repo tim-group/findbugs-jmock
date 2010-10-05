@@ -12,11 +12,9 @@
 
   <Detector class="com.youdevise.fbplugins.jmock.UnassertedMockeryDetector" >
     <Details>
-      <![CDATA[
-        <p> This detector looks for expectations being set on a JMock context, 
+      <![CDATA[<p> This detector looks for expectations being set on a JMock context, 
         where the tests forget to assert that the expectations are satisfied.
-        </p>
-      ]]>
+        </p>]]>
     </Details>
   </Detector>
 
@@ -24,15 +22,11 @@
   <BugPattern type="JMOCK_UNASSERTED_CONTEXT">
     <ShortDescription>Forgot to call mockery.assertIsSatisfied()</ShortDescription>
 
-<LongDescription>
-{1} places expectations on an instance of org.jmock.Mockery, 
-but does not assert the expectations are satisfied (with a call to mockery.assertIsSatisfied()).
-
-</LongDescription>
+<LongDescription>{1} places expectations on an instance of org.jmock.Mockery, 
+but does not assert the expectations are satisfied (with a call to mockery.assertIsSatisfied()).</LongDescription>
 
 <Details>
-  <![CDATA[
-    <p>
+  <![CDATA[<p>
     Expectations placed on an instance of org.jmock.Mockery are usually part of testing behaviour in a unit test. 
     If expectations are added, but the test does not check they are satisfied, 
     the test will not fail when the expected behaviour is not observed. This is akin to writing a JUnit test without any calls to assertXXX().
