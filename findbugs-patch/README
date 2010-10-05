@@ -1,0 +1,4 @@
+The file "findbugs-NotFilter.patch" contains a patch file for an enhancement to FindBugs which enables the <Not> element in the filter file.
+
+The filed feature request ticket is viewable here: 
+	http://sourceforge.net/tracker/index.php?func=detail&aid=3079980&group_id=96405&atid=614696

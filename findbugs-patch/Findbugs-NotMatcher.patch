@@ -1,0 +1,296 @@
+Index: src/java/edu/umd/cs/findbugs/filter/NotMatcher.java
+===================================================================
+--- src/java/edu/umd/cs/findbugs/filter/NotMatcher.java	(revision 0)
++++ src/java/edu/umd/cs/findbugs/filter/NotMatcher.java	(revision 0)
+@@ -0,0 +1,48 @@
++package edu.umd.cs.findbugs.filter;
++
++import java.io.IOException;
++
++import edu.umd.cs.findbugs.BugInstance;
++import edu.umd.cs.findbugs.filter.Matcher;
++import edu.umd.cs.findbugs.xml.XMLOutput;
++
++public class NotMatcher extends CompoundMatcher {
++
++    public boolean match(BugInstance bugInstance) {
++    	if(!childIterator().hasNext() ) {
++    		return false;
++    	}
++    	
++    	Matcher invertedMatcher = childIterator().next();
++        return ! invertedMatcher.match(bugInstance);
++    }
++
++    public void writeXML(XMLOutput xmlOutput, boolean disabled)  throws IOException {
++    	if(childIterator().hasNext()) {
++	        xmlOutput.startTag("Not");
++	        if (disabled) xmlOutput.addAttribute("disabled","true");
++	        Matcher invertedMatcher = childIterator().next();
++	        xmlOutput.stopTag(false);
++	        
++			invertedMatcher.writeXML(xmlOutput, disabled);
++	        
++	        xmlOutput.closeTag("Not");
++    	}
++    }
++    @Override
++    public String toString() {
++    	Matcher invertedMatcher = childIterator().hasNext() ? childIterator().next() : null;
++    	String invertedMatcherString = invertedMatcher == null ? "" : invertedMatcher.toString(); 
++        return "Not(" + invertedMatcherString +")";
++    }
++    
++    @Override
++    public int maxChildren() {
++        return 1;
++    }
++    
++    @Override
++    public void addChild(Matcher child) {
++        super.addChild(child);
++    }
++}
+Index: src/java/edu/umd/cs/findbugs/filter/CompoundMatcher.java
+===================================================================
+--- src/java/edu/umd/cs/findbugs/filter/CompoundMatcher.java	(revision 12816)
++++ src/java/edu/umd/cs/findbugs/filter/CompoundMatcher.java	(working copy)
+@@ -87,6 +87,10 @@
+         buf.setLength(buf.length() - 1);
+         return buf.toString();
+     }
++
++    public int maxChildren() {
++        return Integer.MAX_VALUE;
++    }
+ }
+ 
+ // vim:ts=4
+Index: src/java/edu/umd/cs/findbugs/SAXBugCollectionHandler.java
+===================================================================
+--- src/java/edu/umd/cs/findbugs/SAXBugCollectionHandler.java	(revision 12816)
++++ src/java/edu/umd/cs/findbugs/SAXBugCollectionHandler.java	(working copy)
+@@ -19,9 +19,14 @@
+ 
+ package edu.umd.cs.findbugs;
+ 
++import static java.util.Arrays.asList;
++import static java.util.Collections.unmodifiableSet;
++
+ import java.io.File;
+ import java.text.ParseException;
+ import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.Set;
+ import java.util.Stack;
+ import java.util.logging.Logger;
+ import java.util.regex.Pattern;
+@@ -43,6 +48,7 @@
+ import edu.umd.cs.findbugs.filter.LocalMatcher;
+ import edu.umd.cs.findbugs.filter.Matcher;
+ import edu.umd.cs.findbugs.filter.MethodMatcher;
++import edu.umd.cs.findbugs.filter.NotMatcher;
+ import edu.umd.cs.findbugs.filter.OrMatcher;
+ import edu.umd.cs.findbugs.filter.PriorityMatcher;
+ import edu.umd.cs.findbugs.filter.RankMatcher;
+@@ -53,7 +59,7 @@
+ /**
+  * Build a BugCollection based on SAX events. This is intended to replace the
+  * old DOM-based parsing of XML bug result files, which was very slow.
+- * 
++ *
+  * @author David Hovemeyer
+  */
+ public class SAXBugCollectionHandler extends DefaultHandler {
+@@ -74,19 +80,19 @@
+         return memoized(attributes.getValue(qName));
+     }
+ 
+-    private BugCollection bugCollection;
++    private final BugCollection bugCollection;
+ 
+-    private Project project;
++    private final Project project;
+ 
+-    private Stack<CompoundMatcher> matcherStack = new Stack<CompoundMatcher>();
++    private final Stack<CompoundMatcher> matcherStack = new Stack<CompoundMatcher>();
+ 
+     private Filter filter;
+ 
+-    private MapCache<String, String> cache = new MapCache<String, String>(2000);
++    private final MapCache<String, String> cache = new MapCache<String, String>(2000);
+ 
+-    private ArrayList<String> elementStack;
++    private final ArrayList<String> elementStack;
+ 
+-    private StringBuilder textBuffer;
++    private final StringBuilder textBuffer;
+ 
+     private BugInstance bugInstance;
+ 
+@@ -97,7 +103,7 @@
+     // private ClassHash classHash;
+     private ClassFeatureSet classFeatureSet;
+ 
+-    private ArrayList<String> stackTrace;
++    private final ArrayList<String> stackTrace;
+ 
+     private int nestingOfIgnoredElements = 0;
+ 
+@@ -328,8 +334,7 @@
+                         bugCollection.getProjectStats().addClass(className, sourceFile, isInterface, size);
+                     }
+ 
+-                } else if (isTopLevelFilter(outerElement) || outerElement.equals("Match") || outerElement.equals("And")
+-                        || outerElement.equals("Or")) {
++                } else if (isTopLevelFilter(outerElement) || isCompoundElementTag(outerElement)) {
+                     parseMatcher(qName, attributes);
+                 } else if (outerElement.equals("ClassFeatures")) {
+                     if (qName.equals(ClassFeatureSet.ELEMENT_NAME)) {
+@@ -385,6 +390,10 @@
+         elementStack.add(qName);
+     }
+ 
++    private boolean isCompoundElementTag(String qName) {
++        return outerElementTags .contains(qName);
++    }
++
+     private boolean isTopLevelFilter(String qName) {
+         return qName.equals(FIND_BUGS_FILTER) || qName.equals("SuppressionFilter");
+     }
+@@ -418,6 +427,7 @@
+     }
+ 
+     boolean nextMatchedIsDisabled;
++    private final Set outerElementTags = unmodifiableSet(new HashSet(asList("And", "Match", "Or", "Not")));;
+ 
+     private void parseMatcher(String qName, Attributes attributes) throws SAXException {
+         if (DEBUG)
+@@ -476,6 +486,9 @@
+                 else if (classMatch != null)
+                     addMatcher(new ClassMatcher(classMatch));
+             }
++        } else if(qName.equals("Not")) {
++        	NotMatcher matcher = new NotMatcher();
++        	pushCompoundMatcherAsChild(matcher);
+         }
+         nextMatchedIsDisabled = false;
+     }
+@@ -584,7 +597,7 @@
+ 
+     /**
+      * Extract a hash value from an element.
+-     * 
++     *
+      * @param qName
+      *            name of element containing hash value
+      * @param attributes
+@@ -652,7 +665,7 @@
+         } else if (elementStack.size() > 1) {
+             String outerElement = elementStack.get(elementStack.size() - 2);
+ 
+-            if (qName.equals("Or") || qName.equals("And") || qName.equals("Match") || isTopLevelFilter(qName)) {
++            if (isTopLevelFilter(qName) || isCompoundElementTag(qName)) {
+                 if (DEBUG)
+                     System.out.println("  ending " + elementStack + " " + qName + " " + matcherStack);
+ 
+Index: src/junit/edu/umd/cs/findbugs/filter/NotMatcherTest.java
+===================================================================
+--- src/junit/edu/umd/cs/findbugs/filter/NotMatcherTest.java	(revision 0)
++++ src/junit/edu/umd/cs/findbugs/filter/NotMatcherTest.java	(revision 0)
+@@ -0,0 +1,95 @@
++/*
++ * FindBugs - Find Bugs in Java programs
++ * Copyright (C) 2003-2008 University of Maryland
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ */
++
++package edu.umd.cs.findbugs.filter;
++
++import static org.junit.matchers.JUnitMatchers.containsString;
++
++import java.io.ByteArrayOutputStream;
++import java.io.IOException;
++
++import junit.framework.TestCase;
++import edu.umd.cs.findbugs.BugInstance;
++import edu.umd.cs.findbugs.xml.OutputStreamXMLOutput;
++import edu.umd.cs.findbugs.xml.XMLOutput;
++
++public class NotMatcherTest extends TestCase {
++
++    private final BugInstance bug = new BugInstance("UUF_UNUSED_FIELD", 0);
++
++    public void testInvertsResultsFromWrappedMatcher_doesntMatchWhenWrappedDoesMatch() throws Exception {
++        Matcher wrappedMatcher = new TestMatcher(true);
++        NotMatcher notMatcher = new NotMatcher();
++        notMatcher.addChild(wrappedMatcher);
++
++        assertFalse(notMatcher.match(bug));
++    }
++
++    public void testInvertsResultsFromWrappedMatcher_doesMatchWhenWrappedDoesnt() throws Exception {
++        Matcher wrappedMatcher = new TestMatcher(false);
++        NotMatcher notMatcher = new NotMatcher();
++        notMatcher.addChild(wrappedMatcher);
++
++        assertTrue(notMatcher.match(bug));
++    }
++
++    public void testWriteXMLOutputAddsNotTagsAroundWrappedMatchersOutput() throws Exception {
++        Matcher wrappedMatcher = new TestMatcher(true);
++        NotMatcher notMatcher = new NotMatcher();
++        notMatcher.addChild(wrappedMatcher);
++
++        String xmlOutputCreated = writeXMLAndGetStringOutput(notMatcher);
++
++        assertTrue(containsString("<Not>").matches(xmlOutputCreated));
++        assertTrue(containsString("<TestMatch>").matches(xmlOutputCreated));
++        assertTrue(containsString("</TestMatch>").matches(xmlOutputCreated));
++        assertTrue(containsString("</Not>").matches(xmlOutputCreated));
++    }
++
++    private String writeXMLAndGetStringOutput(NotMatcher notMatcher) throws IOException {
++        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
++        XMLOutput xmlOutput = new OutputStreamXMLOutput(outputStream);
++
++        notMatcher.writeXML(xmlOutput, false);
++        xmlOutput.finish();
++
++        String xmlOutputCreated = outputStream.toString();
++        return xmlOutputCreated;
++    }
++
++
++    private static class TestMatcher implements Matcher {
++
++        private final boolean alwaysMatches;
++
++        public TestMatcher(boolean alwaysMatches) {
++            this.alwaysMatches = alwaysMatches;
++        }
++
++        public boolean match(BugInstance bugInstance) {
++            return alwaysMatches;
++        }
++
++        public void writeXML(XMLOutput xmlOutput, boolean disabled) throws IOException {
++            xmlOutput.openTag("TestMatch");
++            xmlOutput.closeTag("TestMatch");
++        }
++
++    }
++}
