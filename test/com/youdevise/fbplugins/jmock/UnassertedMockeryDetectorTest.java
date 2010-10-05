@@ -15,6 +15,7 @@ import org.mockito.Matchers;
 
 import com.youdevise.fbplugins.DetectorRunner;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied;
+import com.youdevise.fbplugins.jmock.benchmarks.TestThatIsRunWithJMock;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatOnlyUsesAllowingExpectation;
 import com.youdevise.fbplugins.jmock.benchmarks.TestWithoutAssertingExpectations;
 
@@ -52,7 +53,10 @@ public class UnassertedMockeryDetectorTest {
         assertNoBugsReportedForClass(TestThatOnlyUsesAllowingExpectation.class);
     }
 
-    
+    @Test
+    public void classRunWithJMockDoesNotHaveBugReported() throws Exception {
+        assertNoBugsReportedForClass(TestThatIsRunWithJMock.class);
+    }
     
     private void assertBugReportedAgainstClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
         DetectorRunner.runDetectorOnClass(detector, classToTest, bugReporter);

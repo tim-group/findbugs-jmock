@@ -54,8 +54,10 @@ public class UnassertedMockeryDetector implements Detector {
 
     @Override
     public void visitClassContext(ClassContext classContext) {
+        
         JUnitTestClassVisitor testMethodFinder = analyseClassToDiscoverJUnitTestMethods(classContext);
-        if(!testMethodFinder.hasFoundTestMethods()) { return; }
+        
+        if(!testMethodFinder.hasFoundTestMethods() || testMethodFinder.isRunWithJMockTestRunner()) { return; }
         
         List<Method> methods = classContext.getMethodsInCallOrder();
         for (Method method : methods) {
