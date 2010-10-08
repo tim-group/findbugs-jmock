@@ -36,9 +36,12 @@ import edu.umd.cs.findbugs.classfile.MethodDescriptor;
 
 public class UnassertedMockeryDetector implements Detector {
 
+    static {
+        System.out.printf("Registered plugin detector [%s]%n", UnassertedMockeryDetector.class.getSimpleName());
+    }
+    
     private final BugReporter bugReporter;
-    private List<String> expectationMethodNames;
-	
+    private final List<String> expectationMethodNames;
 
     public UnassertedMockeryDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -50,8 +53,6 @@ public class UnassertedMockeryDetector implements Detector {
         return Collections.unmodifiableList(methodNames);
     }
     
-    
-
     @Override
     public void visitClassContext(ClassContext classContext) {
         
@@ -104,7 +105,6 @@ public class UnassertedMockeryDetector implements Detector {
         boolean doesCallCheckingOnMockery = false;
         boolean assertIsSatisfiedShouldBeCalled = false;
         boolean assertIsSatisfiedIsActuallyCalled = false;
-
 
         for (Iterator<Location> i = cfg.locationIterator(); i.hasNext();) {
             Location location = i.next();
@@ -180,7 +180,6 @@ public class UnassertedMockeryDetector implements Detector {
         }
     }
 
-
     private boolean analyseExpectationsConstructor(ClassContext classContext, Method method) throws CFGBuilderException, DataflowAnalysisException {
         CFG cfg = classContext.getCFG(method);
         ConstantDataflow constantDataflow = classContext.getConstantDataflow(method);
@@ -208,13 +207,11 @@ public class UnassertedMockeryDetector implements Detector {
     }
 
     private void doReportBug(ClassContext classContext, Method method) {
-        System.out.printf("Running plugin detector (on %s)%n", classContext.getJavaClass().getClassName());
         MethodDescriptor methodDescriptor = new MethodDescriptor(classContext.getJavaClass().getClassName(), method.getName(),
                 method.getSignature(), method.isStatic());
         BugInstance bug = new BugInstance(this, "JMOCK_UNASSERTED_CONTEXT", Priorities.NORMAL_PRIORITY).addClassAndMethod(methodDescriptor);
         bugReporter.reportBug(bug);
 	}
-    
     
     private boolean createsExpectationWhichShouldBeAsserted(String methodName) {
         return expectationMethodNames.contains(methodName);
