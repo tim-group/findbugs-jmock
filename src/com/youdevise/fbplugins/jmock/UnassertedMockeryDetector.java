@@ -42,6 +42,7 @@ public class UnassertedMockeryDetector implements Detector {
     
     private final BugReporter bugReporter;
     private final List<String> expectationMethodNames;
+    private int PRIORITY_TO_REPORT = Priorities.LOW_PRIORITY;;
 
     public UnassertedMockeryDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -209,7 +210,7 @@ public class UnassertedMockeryDetector implements Detector {
     private void doReportBug(ClassContext classContext, Method method) {
         MethodDescriptor methodDescriptor = new MethodDescriptor(classContext.getJavaClass().getClassName(), method.getName(),
                 method.getSignature(), method.isStatic());
-        BugInstance bug = new BugInstance(this, "JMOCK_UNASSERTED_CONTEXT", Priorities.NORMAL_PRIORITY).addClassAndMethod(methodDescriptor);
+        BugInstance bug = new BugInstance(this, "JMOCK_UNASSERTED_CONTEXT", PRIORITY_TO_REPORT).addClassAndMethod(methodDescriptor);
         bugReporter.reportBug(bug);
 	}
     
