@@ -42,7 +42,7 @@ public class UnassertedMockeryDetector implements Detector {
     
     private final BugReporter bugReporter;
     private final List<String> expectationMethodNames;
-    private int PRIORITY_TO_REPORT = Priorities.LOW_PRIORITY;;
+    private static final int PRIORITY_TO_REPORT = Priorities.NORMAL_PRIORITY;
 
     public UnassertedMockeryDetector(BugReporter bugReporter) {
         this.bugReporter = bugReporter;
@@ -50,7 +50,7 @@ public class UnassertedMockeryDetector implements Detector {
     }
     
     private List<String> listExpectationMethodNames() {
-        List<String> methodNames = asList("oneOf", "exactly", "one", "atLeast", "between", "atMost", "never", "with");
+        List<String> methodNames = asList("oneOf", "exactly", "one", "atLeast", "between", "atMost", "never");
         return Collections.unmodifiableList(methodNames);
     }
     

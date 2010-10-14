@@ -9,7 +9,7 @@ public class TestWithoutAssertingExpectations {
     @Test public void
     dontAssertContextIsSatisfied() {
         Mockery context = new Mockery();
-        final MyMockedClass mocked = context.mock(MyMockedClass.class);
+        final MyMockedInterface mocked = context.mock(MyMockedInterface.class);
         context.checking(new Expectations() {{
             oneOf(mocked).meh();
             

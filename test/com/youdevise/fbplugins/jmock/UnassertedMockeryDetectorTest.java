@@ -17,6 +17,8 @@ import com.youdevise.fbplugins.DetectorRunner;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatIsRunWithJMock;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatOnlyUsesAllowingExpectation;
+import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndAllowing;
+import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndExpectationRequiringAssertion;
 import com.youdevise.fbplugins.jmock.benchmarks.TestWithoutAssertingExpectations;
 
 import edu.umd.cs.findbugs.BugInstance;
@@ -56,6 +58,16 @@ public class UnassertedMockeryDetectorTest {
     @Test
     public void classRunWithJMockDoesNotHaveBugReported() throws Exception {
         assertNoBugsReportedForClass(TestThatIsRunWithJMock.class);
+    }
+    
+    @Test
+    public void unassertedMockeryUsingWithAndAllowingDoesNotHaveBugReported() throws Exception {
+        assertNoBugsReportedForClass(TestThatUsesWithAndAllowing.class);
+    }
+    
+    @Test
+    public void unassertedMockeryUsingWithAndExpectationRequiringAssertionDoesHaveBugReported() throws Exception {
+        assertBugReportedAgainstClass(TestThatUsesWithAndExpectationRequiringAssertion.class);
     }
     
     private void assertBugReportedAgainstClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
