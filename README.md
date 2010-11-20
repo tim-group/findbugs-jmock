@@ -30,6 +30,7 @@ An example of a faulty test could be:
     }
     
 The problem here is the test does not have either of:
+
  * a call to 'context.assertIsSatisfied()'
  * the @RunWith(JMock.class) annotation applied to the test class
 	
@@ -43,7 +44,7 @@ The project can be built with [Maven](http://maven.apache.org/).
 
 # License #
 
-Open source under the very permissive [MIT license]().
+Open source under the very permissive [MIT license](https://github.com/Grundlefleck/findbugs-jmock/blob/master/LICENSE).
 
 # Acknowledgements #
 
