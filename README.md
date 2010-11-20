@@ -4,7 +4,7 @@
 
 # Installation #
 
-With a configured and running FindBugs installation, download the FindBugs4JMock jar file and place it in the 'plugin' directory of your FindBugs installation. FindBugs will automatically enable the JAR the next time an analysis is run.
+With a configured and running FindBugs installation, download the [FindBugs4JMock jar](https://github.com/downloads/Grundlefleck/findbugs-jmock/findbugs4jmock-0.1.0-SNAPSHOT.jar) and place it in the 'plugin' directory of your FindBugs installation. FindBugs will automatically enable the JAR the next time an analysis is run.
 
 # What does the plugin do? #
 
