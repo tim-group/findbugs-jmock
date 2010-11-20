@@ -13,7 +13,7 @@ public class TestThatDoesAssertIsSatisfied {
         Mockery context = new Mockery();
         final MyMockedInterface mocked = context.mock(MyMockedInterface.class);
         context.checking(new Expectations() {{
-            oneOf(mocked).meh();
+            oneOf(mocked).expectedMethodCall();
             
         }});
         

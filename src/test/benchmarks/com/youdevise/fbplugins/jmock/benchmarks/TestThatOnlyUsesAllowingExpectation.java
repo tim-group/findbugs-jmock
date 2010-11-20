@@ -12,7 +12,7 @@ public class TestThatOnlyUsesAllowingExpectation {
         Mockery context = new Mockery();
         final MyMockedInterface mocked = context.mock(MyMockedInterface.class);
         context.checking(new Expectations() {{
-            allowing(mocked).meh();
+            allowing(mocked).expectedMethodCall();
         }});
         
         context.assertIsSatisfied();

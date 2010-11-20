@@ -4,6 +4,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
 
+//@RunWith(JMock.class)
 public class TestWithoutAssertingExpectations {
 
     @Test public void
@@ -11,12 +12,13 @@ public class TestWithoutAssertingExpectations {
         Mockery context = new Mockery();
         final MyMockedInterface mocked = context.mock(MyMockedInterface.class);
         context.checking(new Expectations() {{
-            oneOf(mocked).meh();
+            oneOf(mocked).expectedMethodCall();
             
         }});
         
-//        context.assertIsSatisfied();
+        // do something which will invoke mocked.expectedMethodCall();
+        
+        // context.assertIsSatisfied();
     }
-    
 }
 
