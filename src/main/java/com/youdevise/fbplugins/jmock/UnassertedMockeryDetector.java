@@ -208,7 +208,8 @@ public class UnassertedMockeryDetector implements Detector {
     }
 
     private void doReportBug(ClassContext classContext, Method method) {
-        MethodDescriptor methodDescriptor = new MethodDescriptor(classContext.getJavaClass().getClassName(), method.getName(),
+        String slashedClassName = classContext.getClassDescriptor().getClassName();
+		MethodDescriptor methodDescriptor = new MethodDescriptor(slashedClassName, method.getName(),
                 method.getSignature(), method.isStatic());
         BugInstance bug = new BugInstance(this, "JMOCK_UNASSERTED_CONTEXT", PRIORITY_TO_REPORT).addClassAndMethod(methodDescriptor);
         bugReporter.reportBug(bug);
