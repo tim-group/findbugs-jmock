@@ -6,7 +6,6 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-
 import edu.umd.cs.findbugs.BugInstance;
 
 public class BugInstanceMatchers {

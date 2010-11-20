@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+Test set: com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.03 sec <<< FAILURE!
+com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied.testDoAssert()  Time elapsed: 0.011 sec  <<< FAILURE!
+not all expectations were satisfied
+expectations:
+  expected once, never invoked: myMockedInterface.meh(); returns a default value
+	at org.jmock.Mockery.assertIsSatisfied(Mockery.java:196)
+	at com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied.testDoAssert(TestThatDoesAssertIsSatisfied.java:20)
+

@@ -30,6 +30,8 @@ import edu.umd.cs.findbugs.classfile.impl.DirectoryCodeBase;
 import edu.umd.cs.findbugs.classfile.impl.FilesystemCodeBaseLocator;
 
 public class DetectorRunner {
+	
+	private static final String CODEBASE_DIRECTORY = "./src/test/benchmarks/";
 
     public static void runDetectorOnClass(Detector pluginDetector, Class<?> classToTest, BugReporter bugReporter) throws CheckedAnalysisException, IOException, InterruptedException {
         setUpStaticDependenciesWithinFindBugs(bugReporter);
@@ -46,7 +48,7 @@ public class DetectorRunner {
         bugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
         ClassPathImpl classPath = new ClassPathImpl();
         ICodeBaseLocator codeBaseLocator = new FilesystemCodeBaseLocator(".");
-        ICodeBase codeBase = new DirectoryCodeBase(codeBaseLocator, new File("./bin"));
+        ICodeBase codeBase = new DirectoryCodeBase(codeBaseLocator, new File(CODEBASE_DIRECTORY));
         codeBase.setApplicationCodeBase(true);
         classPath.addCodeBase(codeBase);
 
