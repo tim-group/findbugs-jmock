@@ -7,8 +7,8 @@
 	
 	<url>http://www.youdevise.com/</url>
 	<scm>
-		<connection>scm:svn:http://somerepository.com/svn_repo/trunk</connection>
-		<developerConnection>scm:git:https://github.com/youdevise/</developerConnection>
+		<connection>scm:git:git://github.com/youdevise/findbugs-jmock</connection>
+		<developerConnection>scm:git:git://github.com/youdevise/findbugs-jmock</developerConnection>
 	</scm>
 
 	
