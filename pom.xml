@@ -3,7 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.youdevise</groupId>
 	<artifactId>findbugs4jmock</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1</version>
+	
+	<url>http://www.youdevise.com/</url>
+	<scm>
+		<connection>scm:svn:http://somerepository.com/svn_repo/trunk</connection>
+		<developerConnection>scm:git:https://github.com/youdevise/</developerConnection>
+	</scm>
+
+	
 	<name>findbugs4jmock</name>
 	<description>A plugin for the FindBugs tool which detects faulty jMock
 		tests.</description>
