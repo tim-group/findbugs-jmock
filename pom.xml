@@ -57,7 +57,7 @@
 			<groupId>jmock</groupId>
 			<artifactId>jmock</artifactId>
 			<version>1.2.0</version>
-			<scope>test</scope>
+			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
@@ -69,7 +69,7 @@
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
 			<version>2.5.1</version>
-			<scope>test</scope>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
