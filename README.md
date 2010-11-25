@@ -4,7 +4,7 @@
 
 # Installation #
 
-With a configured and running FindBugs installation, download the [FindBugs4JMock jar](https://github.com/downloads/Grundlefleck/findbugs-jmock/findbugs4jmock-0.1.0-SNAPSHOT.jar) and place it in the 'plugin' directory of your FindBugs installation. FindBugs will automatically enable the JAR the next time an analysis is run.
+With a configured and running FindBugs installation, download the [FindBugs4JMock jar](https://github.com/downloads/youdevise/findbugs-jmock/findbugs4jmock-0.1.jar) and place it in the 'plugin' directory of your FindBugs installation. FindBugs will automatically enable the JAR the next time an analysis is run.
 
 # What does the plugin do? #
 
@@ -44,7 +44,7 @@ The project can be built with [Maven](http://maven.apache.org/).
 
 # License #
 
-Open source under the very permissive [MIT license](https://github.com/Grundlefleck/findbugs-jmock/blob/master/LICENSE).
+Open source under the very permissive [MIT license](https://github.com/youdevise/findbugs-jmock/blob/master/LICENSE).
 
 # Acknowledgements #
 
