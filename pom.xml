@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>findbugs</artifactId>
-			<version>1.3.7</version>
+			<version>1.3.9</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -42,17 +42,20 @@
 			<version>1.8.4</version>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
 			<version>4.8.2</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<version>1.2</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>jmock</groupId>
 			<artifactId>jmock</artifactId>
@@ -65,12 +68,23 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
 			<version>2.5.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.youdevise</groupId>
+			<artifactId>test-driven-detectors4findbugs</artifactId>
+			<version>0.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/test/test-driven-detectors4findbugs-0.1.jar
+			</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>

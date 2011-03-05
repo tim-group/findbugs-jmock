@@ -78,9 +78,8 @@ public class UnassertedMockeryDetector implements Detector {
     
     @Override
     public void visitClassContext(ClassContext classContext) {
-        
         JUnitTestClassVisitor testMethodFinder = analyseClassToDiscoverJUnitTestMethods(classContext);
-        
+			
         if(!testMethodFinder.hasFoundTestMethods() || testMethodFinder.isRunWithJMockTestRunner()) { return; }
         
         List<Method> methods = classContext.getMethodsInCallOrder();
@@ -96,8 +95,8 @@ public class UnassertedMockeryDetector implements Detector {
             }
 		}
     }
-
-    private JUnitTestClassVisitor analyseClassToDiscoverJUnitTestMethods(ClassContext classContext) {
+    
+	private JUnitTestClassVisitor analyseClassToDiscoverJUnitTestMethods(ClassContext classContext) {
         ClassDescriptor classDescriptor = classContext.getClassDescriptor();
         
         FBClassReader reader;

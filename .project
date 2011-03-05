@@ -2,7 +2,9 @@
   <name>findbugs4jmock</name>
   <comment>A plugin for the FindBugs tool which detects faulty jMock
 		tests.</comment>
-  <projects/>
+  <projects>
+    <project>test-driven-detectors4findbugs</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

@@ -22,32 +22,21 @@
 */
 package com.youdevise.fbplugins.jmock;
 
-import static com.youdevise.fbplugins.BugInstanceMatchers.hasType;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
+import static com.youdevise.fbplugins.tdd4fb.DetectorAssert.ofType;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
-import com.youdevise.fbplugins.DetectorRunner;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatDoesAssertIsSatisfied;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatIsRunWithJMock;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatOnlyUsesAllowingExpectation;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndAllowing;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndExpectationRequiringAssertion;
 import com.youdevise.fbplugins.jmock.benchmarks.TestWithoutAssertingExpectations;
+import com.youdevise.fbplugins.tdd4fb.DetectorAssert;
 
-import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.Detector;
-import edu.umd.cs.findbugs.ProjectStats;
-import edu.umd.cs.findbugs.classfile.CheckedAnalysisException;
 
 public class UnassertedMockeryDetectorTest {
     
@@ -55,9 +44,7 @@ public class UnassertedMockeryDetectorTest {
     private Detector detector;
 
     @Before public void setUp() {
-        bugReporter = mock(BugReporter.class);
-        ProjectStats projectStats = mock(ProjectStats.class);
-        when(bugReporter.getProjectStats()).thenReturn(projectStats);
+        bugReporter = DetectorAssert.bugReporterForTesting();
 
         detector = new UnassertedMockeryDetector(bugReporter);
     }
@@ -92,14 +79,12 @@ public class UnassertedMockeryDetectorTest {
         assertBugReportedAgainstClass(TestThatUsesWithAndExpectationRequiringAssertion.class);
     }
     
-    private void assertBugReportedAgainstClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
-        DetectorRunner.runDetectorOnClass(detector, classToTest, bugReporter);
-        verify(bugReporter).reportBug(Matchers.argThat(hasType("JMOCK_UNASSERTED_CONTEXT")));
+    private void assertBugReportedAgainstClass(Class<?> classToTest) throws Exception {
+        DetectorAssert.assertBugReported(classToTest, detector, bugReporter, ofType("JMOCK_UNASSERTED_CONTEXT"));
     }
     
-    private void assertNoBugsReportedForClass(Class<?> classToTest) throws CheckedAnalysisException, IOException, InterruptedException {
-        DetectorRunner.runDetectorOnClass(detector, classToTest, bugReporter);
-        verify(bugReporter, never()).reportBug(any(BugInstance.class));
+    private void assertNoBugsReportedForClass(Class<?> classToTest) throws Exception {
+        DetectorAssert.assertNoBugsReported(classToTest, detector, bugReporter);
     }
     
     
