@@ -87,10 +87,8 @@
 		<dependency>
 			<groupId>com.youdevise</groupId>
 			<artifactId>test-driven-detectors4findbugs</artifactId>
-			<version>0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/test/test-driven-detectors4findbugs-0.1.jar
-			</systemPath>
+			<version>0.2-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
