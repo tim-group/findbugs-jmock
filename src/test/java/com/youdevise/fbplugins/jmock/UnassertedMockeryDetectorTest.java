@@ -32,6 +32,7 @@ import com.youdevise.fbplugins.jmock.benchmarks.TestThatIsRunWithJMock;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatOnlyUsesAllowingExpectation;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndAllowing;
 import com.youdevise.fbplugins.jmock.benchmarks.TestThatUsesWithAndExpectationRequiringAssertion;
+import com.youdevise.fbplugins.jmock.benchmarks.TestUsingNeverThatDoesNotNeedToBeAsserted;
 import com.youdevise.fbplugins.jmock.benchmarks.TestWithoutAssertingExpectations;
 import com.youdevise.fbplugins.tdd4fb.DetectorAssert;
 
@@ -77,6 +78,11 @@ public class UnassertedMockeryDetectorTest {
     @Test
     public void unassertedMockeryUsingWithAndExpectationRequiringAssertionDoesHaveBugReported() throws Exception {
         assertBugReportedAgainstClass(TestThatUsesWithAndExpectationRequiringAssertion.class);
+    }
+
+    @Test
+    public void unassertedMockeryUsingNeverDoesNotHaveBugReported() throws Exception {
+        assertNoBugsReportedForClass(TestUsingNeverThatDoesNotNeedToBeAsserted.class);
     }
     
     private void assertBugReportedAgainstClass(Class<?> classToTest) throws Exception {

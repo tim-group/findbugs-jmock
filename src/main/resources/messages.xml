@@ -71,7 +71,6 @@ public void testSomeAction() {
 	atLeast()
 	between()
 	atMost()
-	never()
 	with()
 	</pre>
 	</p>

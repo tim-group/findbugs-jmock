@@ -72,7 +72,7 @@ public class UnassertedMockeryDetector implements Detector {
     }
     
     private List<String> listExpectationMethodNames() {
-        List<String> methodNames = asList("oneOf", "exactly", "one", "atLeast", "between", "atMost", "never");
+        List<String> methodNames = asList("oneOf", "exactly", "one", "atLeast", "between", "atMost");
         return Collections.unmodifiableList(methodNames);
     }
     
