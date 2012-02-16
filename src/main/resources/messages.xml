@@ -10,7 +10,7 @@
         </Details>
     </Plugin>
 
-  <Detector class="com.youdevise.fbplugins.jmock.UnassertedMockeryDetector" >
+  <Detector class="com.timgroup.fbplugins.jmock.UnassertedMockeryDetector" >
     <Details>
       <![CDATA[<p> This detector looks for expectations being set on a JMock context, 
         where the tests forget to assert that the expectations are satisfied.

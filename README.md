@@ -48,6 +48,6 @@ Open source under the very permissive [MIT license](https://github.com/youdevise
 
 # Acknowledgements #
 
-A project of [youDevise](https://dev.youdevise.com). We're [hiring](http://www.youdevise.com/careers)!
+A project of [TIM Group](http://www.timgroup.com). We're [hiring](http://www.timgroup.com/careers)!
 
 

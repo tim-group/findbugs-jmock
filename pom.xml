@@ -1,99 +1,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.youdevise</groupId>
+	<groupId>com.timgroup</groupId>
 	<artifactId>findbugs4jmock</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	
-	<url>http://www.youdevise.com/</url>
-	<scm>
-		<connection>scm:git:git://github.com/youdevise/findbugs-jmock</connection>
-		<developerConnection>scm:git:git://github.com/youdevise/findbugs-jmock</developerConnection>
-	</scm>
-
-	
+	<packaging>jar</packaging>
 	<name>findbugs4jmock</name>
-	<description>A plugin for the FindBugs tool which detects faulty jMock
-		tests.</description>
-	<dependencies>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>3.1</version>
-			<scope>compile</scope>
-		</dependency>
+	<description>A plugin for the FindBugs tool which detects faulty jMock tests.</description>
+	<url>https://github.com/youdevise/findbugs-jmock</url>
+	
+	<licenses>
+		<license>
+			<name>MIT license</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
 
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>bcel</artifactId>
-			<version>1.3.7</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-commons</artifactId>
-			<version>3.1</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>findbugs</artifactId>
-			<version>1.3.9</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>1.8.4</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit-dep</artifactId>
-			<version>4.8.2</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
-			<version>1.2</version>
-			<scope>compile</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<version>1.2.0</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit4</artifactId>
-			<version>2.5.1</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.youdevise</groupId>
-			<artifactId>test-driven-detectors4findbugs</artifactId>
-			<version>0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/test/test-driven-detectors4findbugs-0.1.jar
-			</systemPath>
-		</dependency>
-
-	</dependencies>
+	<scm>
+		<connection>scm:git:git@github.com:youdevise/findbugs-jmock.git</connection>
+		<developerConnection>scm:git:git@github.com:youdevise/findbugs-jmock.git</developerConnection>
+		<url>git@github.com:youdevise/findbugs-jmock.git</url>
+	</scm>
+	
+	<developers>
+		<developer>
+			<id>Grundlefleck</id>
+			<name>Graham Allan</name>
+			<email>graham.allan@timgroup.com</email>
+		</developer>
+	</developers>
+	
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+	
 
 	<build>
 		<plugins>
@@ -113,6 +56,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.5</version>
+				<configuration>
+          		  <excludes>
+            		<exclude>**/benchmarks/**</exclude>
+          	      </excludes>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -121,7 +69,7 @@
 					<execution>
 						<phase>generate-sources</phase>
 						<goals>
-							<goal>add-source</goal>
+							<goal>add-test-source</goal>
 						</goals>
 						<configuration>
 							<sources>
@@ -131,6 +79,135 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<exclude>**/benchmarks/*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+	
+		<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+	<dependencies>
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>3.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>bcel</artifactId>
+			<version>1.3.7</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>findbugs</artifactId>
+			<version>1.3.9</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<version>1.2.0</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<version>2.5.1</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.4</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.2</version>
+			<scope>test</scope>
+		</dependency>
+		
+
+		<dependency>
+			<groupId>com.youdevise</groupId>
+			<artifactId>test-driven-detectors4findbugs</artifactId>
+			<version>0.2</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+	
 </project>
