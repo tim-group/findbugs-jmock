@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.timgroup</groupId>
 	<artifactId>findbugs4jmock</artifactId>
-	<version>0.3</version>
+	<version>0.4-SNAPSHOT</version>
 	
 	<packaging>jar</packaging>
 	<name>findbugs4jmock</name>
